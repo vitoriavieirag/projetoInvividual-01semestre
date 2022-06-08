@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIaja || Destinos</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="dashboards.css">
+
+    <script src="../js/funcoes.js"></script>
+</head>
+
+<body onload="validarSessao(), atualizacaoPeriodica()">
+    <div class="header">
+        <div class="container">
+          <a href="index.html"><h1>VIaja</h1></a>
+          <div class="hello">
+            <h3>Olá, <span id="b_usuario">usuário</span>!</h3>
+        </div>
+          <ul class="navbar">
+            <li>
+              <a href="mural.html">Publicações</a>
+            </li>
+            <li>
+              <a href="cards.htmll">Destinos</a>
+            </li>
+            <li onclick="limparSessao()">
+                Sair
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="preCorpoQuiz"></div>
+      <div class="corpoQuiz">
+        <div class="container">
+          <div class="cardInicio">
+            <div class="tituloCardInicio">
+              <h2>Quais estilos de viagem você já fez?</h2>
+              <br />
+            </div>
+            <div class="conteudo">
+              <div class="esquerda">
+                <div
+                  onclick="votarPraia()"
+                  class="imgDestinos"
+                  style="
+                    background-image: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRQ2QYzF25P4YUagFQTcWrsy7FWg18BHVucg&usqp=CAU);
+                  "
+                >
+                  <h3>Praia</h3>
+                </div>
+                <div
+                  onclick="votarCampo()"
+                  class="imgDestinos"
+                  style="
+                    background-image: url(data:image/jpeg;base64,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);
+                  "
+                >
+                  <h3>Campo</h3>
+                </div>
+                <div
+                  onclick="votarNeve()"
+                  class="imgDestinos"
+                  style="
+                    background-image: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHaBbsWHOQJP-phxftLtCuja-9SDe7263Flg&usqp=CAU);
+                  "
+                >
+                  <h3>Neve</h3>
+                </div>
+                <div
+                  onclick="votarCachoeira()"
+                  class="imgDestinos"
+                  style="
+                    background-image: url(https://blog.bonitour.com.br/wp-content/uploads/2019/07/Destaque05-Ilhas-brasileiras-para-conhecer-1127x600-1-300x160.jpg);
+                  "
+                >
+                  <div></div>
+                  <h3>Cachoeira</h3>
+                </div>
+              </div>
+              <div class="direita">
+                <div class="cima">
+                  <h3>Destinos visitados:</h3>
+                  <span id="resultDestinos" style="margin-left: 10px"></span>
+                </div>
+                <div class="baixo">
+                  <div>
+                    <canvas id="myChart2" style="position: relative; height:50vh; width:80%;"></canvas>
+                </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- <div class="corpoInterno">
+        
+        </div> -->
+        </div>
+      </div>
+      <div class="footer">
+        <div class="container">
+          Feito com carinho pela Vi, uma amante de viagens ♥
+        </div>
+      </div>
+</body>
+<script>
+    var listaDestinos = []
+    var destino = ""
+    function votarPraia(){
+    destino = "Praia"
+    listaDestinos.push(destino)
+
+    resultDestinos.innerHTML=` ${listaDestinos}`
+  }
+    
+  
+
+  function votarCampo(){
+   destino ="Campo"
+   listaDestinos.push(destino)
+
+   resultDestinos.innerHTML = ` ${listaDestinos}`
+  }
+
+  function votarNeve(){
+    destino ="Neve"
+   listaDestinos.push(destino)
+
+   resultDestinos.innerHTML = ` ${listaDestinos}`
+  }
+
+  function votarCachoeira(){
+    destino ="Cachoeira"
+   listaDestinos.push(destino)
+
+   resultDestinos.innerHTML = ` ${listaDestinos}`
+  }
+
+  const labels2 = [
+        'Praia',
+        'Campo',
+        'Neve',
+        'Cachoeira',
+    ];
+
+    const data2 = {
+        labels: labels2,
+        datasets: [{
+            label: 'Temperatura Média',
+            backgroundColor: '#FF6384',
+            borderColor: '#FF6384',
+            data: [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20],
+        }
+        ]
+    };
+
+    const config2 = {
+        type: 'bar',
+        data: data2,
+        options: {}
+    };
+</script>
+<script>
+  const myChart2 = new Chart(
+        document.getElementById('myChart2'),
+        config2
+    );
+</script>
+<script>
+
+    function atualizacaoPeriodica() {
+        obterdados(1);
+        obterdados(2);
+        obterdados(3);
+        obterdados(4);
+
+        function sendData() {
+			var http = new XMLHttpRequest();
+			http.open('POST', 'http://localhost:3000/api/sendData', false);
+			http.send(null);
+		}
+
+        setInterval(() => {
+			sendData();
+		}, 2000);
+        setTimeout(atualizacaoPeriodica, 5000);
+    }
+
+    function obterdados(idAquario) {
+        fetch(`/medidas/tempo-real/${idAquario}`)
+            .then(resposta => {
+
+                if (resposta.ok) {
+                    resposta.json().then(resposta => {
+
+                        console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
+
+                        var dados = {
+                            temperatura: resposta[0].temperatura,
+                        }
+
+                        alertar(resposta[0].temperatura, idAquario);
+                    });
+                } else {
+
+                    console.error('Nenhum dado encontrado ou erro na API');
+                }
+            })
+            .catch(function (error) {
+                console.error(`Erro na obtenção dos dados do aquario p/ gráfico: ${error.message}`);
+            });
+
+    }
+
+    function alertar(temperatura, idAquario) {
+        var limites = {
+            muito_quente: 23,
+            quente: 22,
+            ideal: 20,
+            frio: 10,
+            muito_frio: 5
+        };
+
+        var classe_temperatura = 'cor-alerta';
+
+        if (temperatura >= limites.muito_quente) {
+            classe_temperatura = 'cor-alerta perigo-quente';
+            console.log("caiu no 1")
+        }
+        else if (temperatura < limites.muito_quente && temperatura >= limites.quente) {
+            classe_temperatura = 'cor-alerta alerta-quente';
+            console.log("caiu no 2")
+        }
+        else if (temperatura < limites.quente && temperatura > limites.frio) {
+            classe_temperatura = 'cor-alerta ideal';
+            console.log("caiu no 3")
+        }
+        else if (temperatura <= limites.frio && temperatura > limites.muito_frio) {
+            classe_temperatura = 'cor-alerta alerta-frio';
+            console.log("caiu no 4")
+        }
+        else if (temperatura < limites.min_temperatura) {
+            classe_temperatura = 'cor-alerta perigo-frio';
+            console.log("caiu no 5")
+        }
+
+        var card;
+
+        if (idAquario == 1) {
+            temp_aquario_1.innerHTML = temperatura + "°C";
+            card = card_1
+        } else if (idAquario == 2) {
+            temp_aquario_2.innerHTML = temperatura + "°C";
+            card = card_2
+        } else if (idAquario == 3) {
+            temp_aquario_3.innerHTML = temperatura + "°C";
+            card = card_3
+        } else if (idAquario == 4) {
+            temp_aquario_4.innerHTML = temperatura + "°C";
+            card = card_4
+        }
+
+        // alterando
+        card.className = classe_temperatura;
+
+    }
+
+</script>
+
+</html>

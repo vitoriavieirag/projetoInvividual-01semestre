@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>VIage││ Cadastro</title>
+    <script src="./js/funcoes.js"></script>
+    <link rel="icon" href="">
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+    <!--header inicio-->
+    <div class="header">
+        <div class="container">
+            <h1>VIaja</h1>
+            <ul class="navbar">
+                <li>
+                    <a href="index.html">Inicio</a>
+                  </li>
+                <li class="agora">
+                    <a href="./cadastro.html">Cadastro</a>
+                </li>
+                <li>
+                    <a href="login.html">Entrar</a>
+                  </li>
+            </ul>
+        </div>
+    </div>
+    <!--header fim-->
+
+    <div class="meioCadastro">
+        <div class="alerta_erro">
+            <div class="card_erro" id="cardErro">
+                <span id="mensagem_erro"></span>
+            </div>
+        </div>
+        <div class="corpo">
+            <div class="container">
+                <div class="cardCadastro">
+                    <h1 class="tituloCadastro">VIage</h1>
+                    <h4 class="descricaoCadastro">Cadastre-se e compartilhe conosco suas<br>
+                      experiencias de viagens</h4>
+                    <form>
+                      <input class="inputCadastro" type="text" id="nomeInput" placeholder="Nome completo" >
+                                 <div id="resultNome" class="result"></div>
+                      <input class="inputCadastro" type="text" id="nomeUsuarioInput" placeholder="Nome de usuário" >
+                                        <div id="resultUsuario" class="result"></div>
+                      <input class="inputCadastro" type="text" id="emailInput" placeholder="E-mail" >
+                                  <div id="resultEmail" class="result"></div>
+                      <input class="inputCadastro" type="password" id="senhaInput" placeholder="Senha" >
+                                  <div id="resultSenha" class="result"></div>
+                      <input class="inputCadastro" type="password" id="confirmacaoSenhaInput" placeholder="Confirme a senha" >
+
+                      <div id="resultConfirmacaoSenha" class="result"></div>
+                    </form>
+                    <button class="botão" type="button"  onclick="cadastrar()">Cadastrar</button>
+                </div>
+
+                <div id="div_aguardar" class="loading-div">
+                    <img src="./assets/circle-loading.gif" id="loading-gif">
+                </div>
+
+                <div id="div_erros_login">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--footer inicio-->
+    <div class="footer">
+        <div class="container">
+            Feito com carinho pela Vi, uma amante de viagens ♥
+        </div>
+    </div>
+    <!--footer fim-->
+</body>
+</html>
+
+<script>
+    function cadastrar() {
+        aguardar();
+
+        //Recupere o valor da nova input pelo nome do id
+        // Agora vá para o método fetch logo abaixo
+        var nomeVar = nomeInput.value;
+        var nomeUsuarioVar = nomeUsuarioInput.value
+        var emailVar = emailInput.value;
+        var senhaVar = senhaInput.value;
+        var confirmacaoSenhaVar = confirmacaoSenhaInput.value;
+
+        if (nomeVar == "" || emailVar == "" || senhaVar == "" || confirmacaoSenhaVar == "") {
+            cardErro.style.display = "block"
+            mensagem_erro.innerHTML = "(Mensagem de erro para todos os campos em branco)";
+
+            finalizarAguardar();
+            return false;
+        }
+        else {
+            setInterval(sumirMensagem, 5000)
+        }
+
+        // Enviando o valor da nova input
+        fetch("/usuarios/cadastrar", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                // crie um atributo que recebe o valor recuperado aqui
+                // Agora vá para o arquivo routes/usuario.js
+                nomeServer: nomeVar,
+                nomeUsuarioServer: nomeUsuarioVar,
+                emailServer: emailVar,
+                senhaServer: senhaVar
+            })
+        }).then(function (resposta) {
+
+            console.log("resposta: ", resposta);
+
+            if (resposta.ok) {
+                cardErro.style.display = "block";
+
+                mensagem_erro.innerHTML = "Cadastro realizado com sucesso! Redirecionando para tela de Login...";
+
+                setTimeout(() => {
+                    window.location = "login.html";
+                }, "2000")
+                
+                limparFormulario();
+                finalizarAguardar();
+            } else {
+                throw ("Houve um erro ao tentar realizar o cadastro!");
+            }
+        }).catch(function (resposta) {
+            console.log(`#ERRO: ${resposta}`);
+            finalizarAguardar();
+        });
+
+        return false;
+    }
+
+    function sumirMensagem() {
+        cardErro.style.display = "none"
+    }
+
+</script>
